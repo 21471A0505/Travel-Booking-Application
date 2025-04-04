@@ -1,0 +1,87 @@
+{% load static %}
+
+<footer>
+			<div id="footer">
+				<div class="container">
+					<div class="row row-bottom-padded-md">
+						<div class="col-md-2 col-sm-2 col-xs-12 fh5co-footer-link">
+							<h3>About {{this_app.app_name  }}</h3>
+							<p>{{ this_app.app_description }}</p>
+						</div>
+						<div class="col-md-2 col-sm-2 col-xs-12 fh5co-footer-link">
+							<h3>Top Activities</h3>
+							<ul>
+								{% for activity in top_activities %}
+								<li><a href="{% url 'tour:activity-detail' activity.activity_slug %}">{{ activity.activity_title }}</a></li>
+								{% endfor %}
+							</ul>
+						</div>
+						<div class="col-md-2 col-sm-2 col-xs-12 fh5co-footer-link">
+							<h3>Popular Regions</h3>
+							<ul>
+								{% for region in popular_regions %}
+									<li><a href="{% url 'tour:region-detail' region.region_slug %}">{{ region.region_title }}</a></li>
+								{% endfor %}
+							</ul>
+						</div>
+						<div class="col-md-2 col-sm-2 col-xs-12 fh5co-footer-link">
+							<h3>Best Tours</h3>
+							<ul>
+								{% for tour in best_tours %}
+									<li><a href="{% url 'tour:tour-detail' tour.tour_slug %}">{{ tour.tour_title }}</a></li>
+								{% endfor %}
+							</ul>
+						</div>
+
+						{% if recent_blogs %}
+						<div class="col-md-2 col-sm-2 col-xs-12 fh5co-footer-link">
+							<h3>Recent Blogs</h3>
+							<ul>
+								{% for blog in recent_blogs %}
+								<li><a href="{% url 'blog:blog-detail' blog.blog_slug %}">{{ blog.blog_title }}</a></li>
+								{% endfor %}
+							</ul>
+						</div>
+						{% endif %}
+
+						<div class="col-md-2 col-sm-2 col-xs-12 fh5co-footer-link">
+							<h3>Quick Links</h3>
+							<ul>
+								{% for footer_page in footer_menu %}
+									<li><a href="{% url 'page:page-detail' footer_page.page_slug %}">{{ footer_page.page_title }}</a></li>
+								{% endfor %}
+									<li><a href="{% url 'marketing:all-testimonials' %}">Testimonials</a></li>
+							</ul>
+
+							<h3 style="margin-top:20%;">Contact Details</h3>
+							<ul>
+								<li><strong>Phone: </strong>{{ this_app.app_contact }}</li>
+								<li><strong>Email: </strong>{{ this_app.app_email}}</li>
+								<li><strong>Address: </strong>{{ this_app.app_address }}, {{ this_app.app_postal }}</li>
+							</ul>
+						</div>
+					</div>
+
+					{% if socialmedias %}
+					<div class="row">
+						<div class="col-md-6 col-md-offset-3 text-center">
+							<p class="fh5co-social-icons">
+								{% for socialmedia in socialmedias %}
+									<a href="{{ socialmedia.socialmedia_url }}" title="{{ socialmedia.socialmedia_title }}" target="_blank"><i class="{{ socialmedia.socialmedia_icon }}"></i></a>
+								{% endfor %}
+							</p>
+							<p>Copyright &COPY; <script>document.write(new Date().getFullYear());</script> {{ this_app.app_name }}. 
+								Made with <i class="icon-heart3"></i> by 
+								{% if this_app.developed_by == "Vijay Thapa" %}
+								<a href="https://linktr.ee/vijaythapa" target="_blank">{{ this_app.developed_by }}</a>
+								{% else %}
+								{{ this_app.developed_by }}
+								{% endif %}
+							</p>
+						</div>
+					</div>
+					{% endif %}
+
+				</div>
+			</div>
+		</footer>

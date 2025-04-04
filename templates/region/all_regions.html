@@ -1,0 +1,105 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+	{% block meta_content %}
+		<title>All Regions - {{ this_app.app_name }}</title>
+		<meta name="description" content="{{ this_app.app_description }}" />
+		<meta name="keywords" content="{{ this_app.app_keywords }}" />
+
+
+		<!-- Facebook and Twitter integration -->
+		<meta property="og:title" content="All Regions - {{ this_app.app_name }}"/>
+		<meta property="og:image" content="{{ this_app.app_logo.url }}"/>
+		<meta property="og:url" content="{% url 'tour:all-regions' %}"/>
+		<meta property="og:site_name" content="{{ this_app.app_name }} - {{ this_app.app_title}}"/>
+		<meta property="og:description" content="{{ this_app.app_description }}"/>
+
+		<meta name="twitter:title" content="All Regions - {{ this_app.app_name }}" />
+		<meta name="twitter:image" content="{{ this_app.app_logo.url }}" />
+		<meta name="twitter:url" content="{% url 'tour:all-regions' %}" />
+		<meta name="twitter:description" content="{{ this_app.app_description }}" />
+		<meta name="twitter:card" content="summary_large_image" />
+	{% endblock meta_content %}
+
+
+	{% block content %}
+
+		
+		<!-- Regions Starts Here -->
+		{% if regions %}
+			<div id="fh5co-tours" class="fh5co-section-gray">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
+							<h3>Best Regions</h3>
+							<p>Best Regions to find adventure activities like Trekking, Mountain Climbing, Rafting, Canyoning and Many More.</p>
+						</div>
+					</div>
+					<div class="row">
+
+						{% for region in regions %}
+							<div class="col-md-4 col-sm-6 fh5co-tours animate-box" data-animate-effect="fadeIn">
+								<div href="#">
+									{% if region.region_image %}
+									<img src="{{ region.region_image.url }}" alt="{{ region.region_title }}" class="img-responsive" style="height:320px; width:100%;">
+									{% else %}
+									<img src="{% static 'images/no-image.jpg' %}" alt="Travel Nepal" class="img-responsive" style="height:320px; width:100%;">
+									{% endif %}
+
+									<div class="desc">
+										<span></span>
+										<h3>{{ region.region_title }}</h3>
+										<br>
+										{% comment %} <span>3 nights + Flight 5*Hotel</span>
+										<span class="price">$1,000</span> {% endcomment %}
+										<a class="btn btn-primary btn-outline" href="{% url 'tour:region-detail' region.region_slug %}">Explore Tours <i class="icon-arrow-right22"></i></a>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+
+						
+					</div>
+					
+						<!-- Pagination Starts Here -->
+						{% if is_paginated %}
+							<div class="text-center">
+								<nav aria-label="Page navigation example">
+								  <ul class="pagination justify-content-center">
+								  	{% if page_obj.has_previous %}
+								  	<li class="page-item">
+								      <a class="page-link" href="?page=1" tabindex="-1" aria-disabled="true">&laquo; First</a>
+								    </li>
+								    <li class="page-item">
+								      <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled="true">Previous</a>
+								    </li>
+								    {% endif %}
+
+								    
+								    <li class="page-item active" aria-current="page">
+								      <a class="page-link" href="?page={{ page_obj.number }}"> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} <span class="sr-only">(current)</span></a>
+								    </li>
+								    
+								    {% if page_obj.has_next %}
+								    <li class="page-item">
+								      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+								    </li>
+								    <li class="page-item">
+								      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+								    </li>
+								    {% endif %}
+
+								  </ul>
+								</nav>
+							</div>
+						{% endif %}
+						<!-- Pagination Ends Here -->
+				</div>
+			</div>
+		{% endif %}
+		<!-- Regions Ends Here -->
+	
+	{% endblock content %}
+

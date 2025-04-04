@@ -1,0 +1,176 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block meta_content %}
+		{% if region.seo_region_title %}
+		<title>{{ region.seo_region_title }} - {{ this_app.app_name }}</title>
+		{% else %}
+		<title>{{ region.region_title }} - {{ this_app.app_name }}</title>
+		{% endif %}
+
+		<meta name="description" content="{{ region.seo_region_description }}" />
+		<meta name="keywords" content="{{ region.seo_region_keywords }}" />
+
+		<!-- Facebook and Twitter integration -->
+		<meta property="og:title" content="{{ region.region_title }}"/>
+		{% if region.region_image %}
+		<meta property="og:image" content="{{ region.region_image.url }}"/>
+		{% endif %}
+		<meta property="og:url" content="{% url 'tour:region-detail' region.region_slug %}"/>
+		<meta property="og:site_name" content="{{ this_app.app_name }} - {{ this_app.app_title}}"/>
+		<meta property="og:description" content="{{ region.seo_region_description }}"/>
+
+		<meta name="twitter:title" content="{{ region.region_title }}" />
+		{% if region.region_image %}
+		<meta property="twitter:image" content="{{ region.region_image.url }}"/>
+		{% endif %}
+		<meta name="twitter:url" content="{% url 'tour:region-detail' region.region_slug %}" />
+		<meta name="twitter:description" content="{{ region.seo_region_description }}" />
+		<meta name="twitter:card" content="summary_large_image" />
+	{% endblock meta_content %}
+
+
+
+	{% block content %}
+	
+		<div class="fh5co-hero">
+			<div class="fh5co-overlay"></div>
+
+			{% if region.region_image %}
+				<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url({{ region.region_image.url }});">
+			{% else %}
+				<div class="fh5co-cover" data-stellar-background-ratio="0.5" style="background-image: url({% static 'images/cover_bg_1.jpg' %});">
+			{% endif %}
+			
+				<div class="desc">
+					<div class="container">
+						<div class="row">
+							
+							<div class="desc2 animate-box">
+								<div class="col-sm-7 col-sm-push-1 col-md-7 col-md-push-1">
+									<!-- <p>HandCrafted by <a href="http://frehtml5.co/" target="_blank" class="fh5co-site-name">FreeHTML5.co</a></p> -->
+									<h2>{{ region.region_title }}</h2>
+									<span class="price">{{ region_tour_count }} Tours</span> 
+									<!-- <p><a class="btn btn-primary btn-lg" href="#">Get Started</a></p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<!-- Tours by Region Starts Here -->
+		<div id="fh5co-blog-section" class="fh5co-section-gray">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
+						<h3>Tours on {{ region.region_title }}</h3>
+						<div>{{ region.region_description|safe }}</div>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+
+				{% if tours %}
+				<div class="row row-bottom-padded-md">
+					{% for tour in tours %}
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="fh5co-blog animate-box">
+
+								{% if tour.tour_image %}
+									<a href="{% url 'tour:tour-detail' tour.tour_slug %}"><img class="img-responsive" src="{{ tour.tour_image.url }}" alt="{{ tour.tour_title }}" style="height:200px; width:100%;"></a>
+								{% else %}
+									<a href="{% url 'tour:tour-detail' tour.tour_slug %}"><img class="img-responsive" src="{% static 'images/no-image.jpg' %}" alt="{{ tour.tour_title }}" style="height:200px; width:100%;"></a>
+								{% endif %}
+								<div class="blog-text">
+									<div class="prod-title">
+										<h3><a href="{% url 'tour:tour-detail' tour.tour_slug %}">{{ tour.tour_title }}</a></h3>
+											<div style="color:silver; margin-bottom:10px;">
+											{% if tour.tour_region %}
+												{% for region in tour.tour_region.all %}
+												<a href="{% url 'tour:region-detail' region.region_slug %}" style="color:silver;">{{ region }}</a>
+												{% endfor %}
+											{% endif %}
+
+											{% if tour.tour_duration %}
+											, {{ tour.tour_duration }} Days
+											{% endif %}
+											</div>
+										<div>{{ tour.tour_description|safe|slice:":110" }} ...</div>
+										<p><a href="{% url 'tour:tour-detail' tour.tour_slug %}">Explore Now</a></p>
+									</div>
+								</div> 
+							</div>
+						</div>
+					{% endfor %}
+
+					
+					
+					<div class="clearfix visible-md-block"></div>
+				</div>
+
+				<div class="col-md-12 text-center animate-box">
+					<p><a class="btn btn-primary btn-outline btn-lg" href="{% url 'tour:all-tours' %}">See All Tours <i class="icon-arrow-right22"></i></a></p>
+				</div>
+
+				{% else %}
+						<div class="alert alert-danger" role="alert">
+						  There are no tours on {{ region.region_title }} for now. Please visit later.
+						</div>
+				{% endif %}
+
+			</div>
+		</div>
+		<!--Tours by Region Ends Here -->
+
+
+		<!-- Similar Regions Starts Here -->
+		{% if regions %}
+			<div id="fh5co-tours" class="fh5co-section-gray" style="padding-top:0px;">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
+							<h3>Other Regions</h3>
+							<p>Best Regions to find adventure activities like Trekking, Mountain Climbing, Rafting, Canyoning and Many More.</p>
+						</div>
+					</div>
+					<div class="row">
+
+						{% for region in regions %}
+							<div class="col-md-4 col-sm-6 fh5co-tours animate-box" data-animate-effect="fadeIn">
+								<div href="#">
+									{% if region.region_image %}
+									<img src="{{ region.region_image.url }}" alt="{{ region.region_title }}" class="img-responsive" style="height:320px; width:100%;">
+									{% else %}
+									<img src="{% static 'images/no-image.jpg' %}" alt="Travel Nepal" class="img-responsive" style="height:320px; width:100%;">
+									{% endif %}
+
+									<div class="desc">
+										<span></span>
+										<h3>{{ region.region_title }}</h3><br>
+										{% comment %} <span>3 nights + Flight 5*Hotel</span>
+										<span class="price">$1,000</span> {% endcomment %}
+										<a class="btn btn-primary btn-outline" href="{% url 'tour:region-detail' region.region_slug %}">Explore Tours <i class="icon-arrow-right22"></i></a>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+
+						<div class="col-md-12 text-center animate-box">
+							<p><a class="btn btn-primary btn-outline btn-lg" href="{% url 'tour:all-regions' %}">See All Regions <i class="icon-arrow-right22"></i></a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		<!-- Similar Regions Ends Here -->
+
+
+	
+	{% endblock content %}
+

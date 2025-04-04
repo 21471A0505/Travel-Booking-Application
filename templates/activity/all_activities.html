@@ -1,0 +1,138 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+	{% block meta_content %}
+		<title>All Activities - {{ this_app.app_name }}</title>
+		<meta name="description" content="{{ this_app.app_description }}" />
+		<meta name="keywords" content="{{ this_app.app_keywords }}" />
+
+
+		<!-- Facebook and Twitter integration -->
+		<meta property="og:title" content="All Activities - {{ this_app.app_name }}"/>
+		<meta property="og:image" content="{{ this_app.app_logo.url }}"/>
+		<meta property="og:url" content="{% url 'tour:all-activities' %}"/>
+		<meta property="og:site_name" content="{{ this_app.app_name }} - {{ this_app.app_title}}"/>
+		<meta property="og:description" content="{{ this_app.app_description }}"/>
+
+		<meta name="twitter:title" content="All Activities - {{ this_app.app_name }}" />
+		<meta name="twitter:image" content="{{ this_app.app_logo.url }}" />
+		<meta name="twitter:url" content="{% url 'tour:all-activities' %}" />
+		<meta name="twitter:description" content="{{ this_app.app_description }}" />
+		<meta name="twitter:card" content="summary_large_image" />
+	{% endblock meta_content %}
+
+
+	{% block content %}
+
+		<!-- Activities Starts Here -->
+		{% if activities %}
+			<div id="fh5co-features">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
+							<h3>All Activities</h3>
+							
+						</div>
+					</div>
+				</div>
+
+				<div class="container">
+					<div class="row">
+
+						{% for activity in activities %}
+						<div class="col-md-4 animate-box">
+							<div class="feature-left">
+								<span class="icon">
+									{% if activity.activity_icon %}
+										<img src="{{  activity.activity_icon }}" alt="{{ activity.activity_title }}" class="img-responsive">
+									{% else %}
+										<i class="icon-hotairballoon"></i>
+									{% endif %}
+								</span>
+								<div class="feature-copy">
+									<h3>{{ activity.activity_title }}</h3>
+									<div>{{ activity.activity_description|safe|slice:":70" }} ...</div>
+									<p><a href="{% url 'tour:activity-detail' activity.activity_slug %}">View Tours</a></p>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		<!-- Activities Ends Here -->
+
+
+		<!-- Blogs Starts Here -->
+		<div id="fh5co-blog-section" class="fh5co-section-gray">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
+						<h3>Recently Added Tours</h3>
+						<p>Explore the newly handcrafted tours for you in the Himalayas.</p>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row row-bottom-padded-md">
+
+					{% if recent_tours %} 
+
+						{% for tour in recent_tours %}
+							<div class="col-lg-4 col-md-4 col-sm-6">
+								<div class="fh5co-blog animate-box">
+
+									{% if tour.tour_image %}
+										<a href="{% url 'tour:tour-detail' tour.tour_slug %}"><img class="img-responsive" src="{{ tour.tour_image.url }}" alt="{{ tour.tour_title }}" style="height:200px; width:100%;"></a>
+									{% else %}
+										<a href="{% url 'tour:tour-detail' tour.tour_slug %}"><img class="img-responsive" src="{% static 'images/no-image.jpg' %}" alt="{{ tour.tour_title }}" style="height:200px; width:100%;"></a>
+									{% endif %}
+
+									<div class="blog-text">
+										<div class="prod-title">
+											<h3><a href="{% url 'tour:tour-detail' tour.tour_slug %}">{{ tour.tour_title }}</a></h3>
+											
+											<div style="color:silver; margin-bottom:10px;">
+											{% if tour.tour_region %}
+												{% for region in tour.tour_region.all %}
+												<a href="{% url 'tour:region-detail' region.region_slug %}" style="color:silver;">{{ region }}</a>
+												{% endfor %}
+											{% endif %}
+
+											{% if tour.tour_duration %}
+											, {{ tour.tour_duration }} Days
+											{% endif %}
+											</div>
+											
+											<p>{{ tour.tour_description|slice:":150" }} ...</p>
+
+											<p><a href="{% url 'tour:tour-detail' tour.tour_slug %}">Explore Now</a></p>
+										</div>
+									</div> 
+								</div>
+							</div>
+						{% endfor %}
+
+					{% endif %}
+
+					<div class="clearfix visible-md-block"></div>
+				</div>
+
+				<div class="col-md-12 text-center animate-box">
+					<p><a class="btn btn-primary btn-outline btn-lg" href="{% url 'tour:all-tours' %}">See All Tours <i class="icon-arrow-right22"></i></a></p>
+				</div>
+
+			</div>
+		</div>
+		<!-- Blog Ends Here -->
+
+
+		<!-- fh5co-blog-section -->
+		
+	
+	{% endblock content %}
+
